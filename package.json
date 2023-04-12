@@ -6,17 +6,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mock-api": "json-server --watch db.json --port 5000",
+    "dev:all": "npm-run-all --parallel dev mock-api"
   },
   "dependencies": {
     "@types/node": "18.15.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
-    "eslint": "8.36.0",
+    "@types/uuid": "^9.0.1",
+    "axios": "^1.3.4",
     "eslint-config-next": "13.2.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "formik": "^2.2.9",
     "next": "13.2.4",
+    "next-auth": "^4.20.1",
+    "normalize.css": "^8.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "react-query": "^3.39.3",
+    "styled-components": "^5.3.9",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "json-server": "^0.17.3",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.0.2"
   }
 }
