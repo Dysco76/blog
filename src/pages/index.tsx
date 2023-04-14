@@ -1,6 +1,5 @@
 import { fetchPosts } from '@/api';
 import { GetServerSideProps } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
@@ -8,7 +7,7 @@ const SHORTENED_BODY_LENGTH = 20;
 
 export default function Home() {
     const { isSuccess, data: posts, isLoading, isError } = useQuery(['getPosts'], fetchPosts);
-    const getShortenedBody = (postBody: types.Post['body']) => {
+    const getShortenedPostBody = (postBody: types.Post['body']) => {
         const allBodyWords = postBody.split(' ');
 
         if (allBodyWords.length <= SHORTENED_BODY_LENGTH) {
@@ -29,7 +28,7 @@ export default function Home() {
                                 <img src={post.cover} alt={`${post.title}: cover image`} width="200"/>
                             )}
                         </Link>
-                        <p>{getShortenedBody(post.body)}</p>
+                        <p>{getShortenedPostBody(post.body)}</p>
                     </div>
                 ))}
             </>

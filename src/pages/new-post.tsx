@@ -3,6 +3,9 @@ import { PropsWithClassName } from '@/shared/utility-types';
 import { useFormik } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 
 type PostFormValues = {
     title: string;
@@ -16,14 +19,16 @@ const initialValues = {
     body: '',
 };
 
-const NewPost = styled(({className}: PropsWithClassName) => {
+const NewPost = styled(({ className }: PropsWithClassName) => {
+
     const formik = useFormik<PostFormValues>({
         initialValues,
         onSubmit: (values) => {
-            const newPost = {...values, id: uuidv4()};
+            const newPost = { ...values, id: uuidv4() };
             createPost(newPost);
         },
     });
+
     return (
         <form className={className} onSubmit={formik.handleSubmit}>
             <label htmlFor="title">Title</label>
@@ -42,3 +47,21 @@ const NewPost = styled(({className}: PropsWithClassName) => {
 `;
 
 export default NewPost;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getServerSession(context.req, context.res, authOptions);
+
+    if (!session) {
+        // Redirect unauthenticated users to the login page or any other page
+        return {
+            redirect: {
+                destination: 'api/auth/signin',
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: { session },
+    };
+};
