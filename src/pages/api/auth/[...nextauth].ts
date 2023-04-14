@@ -14,6 +14,9 @@ export const authOptions = {
         }),
         // ...add more providers here
     ],
+    pages: {
+        signIn: '/login'
+    },
     secret: process.env.NEXTAUTH_SECRET,
 };
 export default NextAuth(authOptions);
