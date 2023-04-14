@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         // Redirect unauthenticated users to the login page or any other page
         return {
             redirect: {
-                destination: 'api/auth/signin',
+                destination: '/login',
                 permanent: false,
             },
         };
