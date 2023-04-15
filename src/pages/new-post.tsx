@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
+import { useSession } from 'next-auth/react';
 
 type PostFormValues = {
     title: string;
@@ -20,12 +21,19 @@ const initialValues = {
 };
 
 const NewPost = styled(({ className }: PropsWithClassName) => {
+    // As this page uses Server Side Rendering, the `session` will be already
+    // populated on render without needing to go through a loading stage.
+    // This is possible because of the shared context configured in `_app.js` that
+    // is used by `useSession()`.
+    const { data: session } = useSession();
 
     const formik = useFormik<PostFormValues>({
         initialValues,
         onSubmit: (values) => {
-            const newPost = { ...values, id: uuidv4() };
-            createPost(newPost);
+            if (session && session.user) {
+                const newPost = { ...values, id: uuidv4(), author: session.user };
+                createPost(newPost);
+            }
         },
     });
 
@@ -62,6 +70,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     return {
-        props: { session },
+        props: { user: session },
     };
 };

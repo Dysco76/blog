@@ -1,9 +1,15 @@
 declare namespace types {
     type Post = {
-        userId?: number;
+        author: types.User;
         id: string;
         title: string;
         body: string;
         cover?: string;
     };
+
+    type User = {
+        email?: string | null;
+        image?: string | null;
+        name?: string | null;
+    }
 }
