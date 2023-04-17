@@ -28,6 +28,7 @@ export default function Home() {
                                 <img src={post.cover} alt={`${post.title}: cover image`} width="200"/>
                             )}
                         </Link>
+                        {post.author && post.author.name && <p>by {post.author.name}</p>}
                         <p>{getShortenedPostBody(post.body)}</p>
                     </div>
                 ))}
