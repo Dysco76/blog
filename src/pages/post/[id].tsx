@@ -23,6 +23,7 @@ const Post = () => {
                 <div>
                     {post.cover && <img src={post.cover} alt={`${post.title}: cover image`} width="500" />}
                     <h1>{post.title}</h1>
+                    {post.author && <p>by {post.author.name}</p>}
                     <p>{post.body}</p>
                 </div>
             )}

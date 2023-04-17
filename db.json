@@ -17,6 +17,28 @@
       "cover": "https://cdn.discordapp.com/attachments/1008571080300052482/1088501633165557780/Dysco_clean_simple_design_blog_post_page_well_structured_sectio_9cba9473-3d95-4911-b0b5-10cbeb3077e5.png",
       "body": "This is a test post!",
       "id": "f9b01782-55cf-4b9a-bb7b-49bac4e8dd0d"
+    },
+    {
+      "title": "This is a post with an author",
+      "cover": "",
+      "body": "Body",
+      "id": "2d1ad181-1f23-45c1-a73c-8ebc00f4b894",
+      "user": {
+        "name": "Dmitry Scherba",
+        "email": "dscherba76@gmail.com",
+        "image": "https://lh3.googleusercontent.com/a/AGNmyxZ3vdQw8S8PjTKJlsXybwyHwhoOA_pLqyIgvYsG=s96-c"
+      }
+    },
+    {
+      "title": "Second post with author",
+      "cover": "",
+      "body": "Body of the post",
+      "id": "d3c359ba-20e2-43e7-9ff7-c6ff541d7d0a",
+      "author": {
+        "name": "Dmitry Scherba",
+        "email": "dscherba76@gmail.com",
+        "image": "https://lh3.googleusercontent.com/a/AGNmyxZ3vdQw8S8PjTKJlsXybwyHwhoOA_pLqyIgvYsG=s96-c"
+      }
     }
   ]
 }
