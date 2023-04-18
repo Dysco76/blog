@@ -31,7 +31,7 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
         initialValues,
         onSubmit: (values) => {
             if (session && session.user) {
-                const newPost = { ...values, id: uuidv4(), author: session.user };
+                const newPost = { ...values, id: uuidv4(), author: session.user, created: new Date().toISOString() };
                 createPost(newPost);
             }
         },

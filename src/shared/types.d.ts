@@ -5,6 +5,7 @@ declare namespace types {
         title: string;
         body: string;
         cover?: string;
+        created: string;
     };
 
     type User = {

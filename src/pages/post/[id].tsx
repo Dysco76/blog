@@ -1,4 +1,5 @@
 import { fetchPostById } from '@/api';
+import { formatDate } from '@/shared/util/formatDate';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -24,6 +25,7 @@ const Post = () => {
                     {post.cover && <img src={post.cover} alt={`${post.title}: cover image`} width="500" />}
                     <h1>{post.title}</h1>
                     {post.author && <p>by {post.author.name}</p>}
+                    <sub>{formatDate(post.created)}</sub>
                     <p>{post.body}</p>
                 </div>
             )}

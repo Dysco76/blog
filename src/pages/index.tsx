@@ -1,4 +1,5 @@
 import { fetchPosts } from '@/api';
+import { formatDate } from '@/shared/util/formatDate';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
@@ -29,6 +30,7 @@ export default function Home() {
                             )}
                         </Link>
                         {post.author && post.author.name && <p>by {post.author.name}</p>}
+                        <sub>{formatDate(post.created)}</sub>
                         <p>{getShortenedPostBody(post.body)}</p>
                     </div>
                 ))}
