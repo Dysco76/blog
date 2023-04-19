@@ -1,7 +1,8 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
-export const authOptions = {
+
+export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
     providers: [
         GithubProvider({
@@ -14,8 +15,25 @@ export const authOptions = {
         }),
         // ...add more providers here
     ],
+    callbacks: {
+        // assign the provider account id to the token id
+        async jwt({ token, account }) {
+            if (account) {
+                token.id = account.providerAccountId;
+            }
+            return token;
+        },
+        // assign the provider account id to the session user id
+        async session({ session, token }) {
+            if (token.id && session.user) {
+                const customUser = session.user as types.User;
+                customUser.id = token.id as string;
+            }
+            return session;
+        },
+    },
     pages: {
-        signIn: '/login'
+        signIn: '/login',
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
