@@ -1,6 +1,7 @@
-import { fetchPostById } from '@/api';
+import { deletePost, fetchPostById } from '@/api';
 import { formatDate } from '@/shared/util/formatDate';
 import { GetServerSideProps } from 'next';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
@@ -8,6 +9,7 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 const Post = () => {
     const router = useRouter();
     const postId = typeof router.query?.id === 'string' ? router.query.id : '';
+    const { data: session } = useSession();
 
     const {
         isSuccess,
@@ -15,6 +17,20 @@ const Post = () => {
         isLoading,
         data: post,
     } = useQuery(['getPostById', postId], () => fetchPostById(postId));
+
+    const isUserAuthor = session?.user?.id === post?.author?.id;
+
+    const deletePostAndRedirect = async () => {
+        try {
+            const response = await deletePost(postId);
+            if (response.status === 200) {
+                // Redirect to the home page
+                router.push('/');
+            }
+        } catch (error) {
+            console.error('Error deleting the post:', error);
+        }
+    };
 
     return (
         <div>
@@ -26,6 +42,16 @@ const Post = () => {
                     <h1>{post.title}</h1>
                     {post.author && <p>by {post.author.name}</p>}
                     <sub>{formatDate(post.created)}</sub>
+                    {isUserAuthor && (
+                        <button
+                            onClick={() => {
+                                console.log('delete post');
+                                deletePostAndRedirect();
+                            }}
+                        >
+                            Delete post
+                        </button>
+                    )}
                     <p>{post.body}</p>
                 </div>
             )}
