@@ -45,7 +45,6 @@ const Post = () => {
                     {isUserAuthor && (
                         <button
                             onClick={() => {
-                                console.log('delete post');
                                 deletePostAndRedirect();
                             }}
                         >
