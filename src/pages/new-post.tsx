@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 type PostFormValues = {
     title: string;
@@ -27,11 +28,14 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
     // This is possible because of the shared context configured in `_app.js` that
     // is used by `useSession()`.
     const { data: session } = useSession();
+    const [creating, setCreating] = useState(false);
+
     const router = useRouter();
 
     const formik = useFormik<PostFormValues>({
         initialValues,
         onSubmit: async (values) => {
+            setCreating(true);
             if (session && session.user) {
                 const newPost = { ...values, id: uuidv4(), author: session.user, created: new Date().toISOString() };
 
@@ -56,7 +60,7 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
             <input value={formik.values.cover} onChange={formik.handleChange} onBlur={formik.handleBlur} id="cover" />
             <label htmlFor="body">Body</label>
             <textarea value={formik.values.body} onChange={formik.handleChange} onBlur={formik.handleBlur} id="body" />
-            <button>Create post</button>
+            <button disabled={creating}>{creating ? 'Creating...' : 'Create post'}</button>
         </form>
     );
 })`
