@@ -4,9 +4,12 @@ import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 const Post = () => {
+    const [deleting, setDeleting] = useState(false);
+
     const router = useRouter();
     const postId = typeof router.query?.id === 'string' ? router.query.id : '';
     const { data: session } = useSession();
@@ -21,6 +24,7 @@ const Post = () => {
     const isUserAuthor = session?.user?.id === post?.author?.id;
 
     const deletePostAndRedirect = async () => {
+        setDeleting(true);
         try {
             const response = await deletePost(postId);
             if (response.status === 200) {
@@ -47,8 +51,9 @@ const Post = () => {
                             onClick={() => {
                                 deletePostAndRedirect();
                             }}
+                            disabled={deleting}
                         >
-                            Delete post
+                            {deleting ? 'Deleting...' : 'Delete post'}
                         </button>
                     )}
                     <p>{post.body}</p>
