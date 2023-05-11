@@ -7,6 +7,7 @@ import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 type PostFormValues = {
     title: string;
@@ -26,13 +27,23 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
     // This is possible because of the shared context configured in `_app.js` that
     // is used by `useSession()`.
     const { data: session } = useSession();
+    const router = useRouter();
 
     const formik = useFormik<PostFormValues>({
         initialValues,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             if (session && session.user) {
                 const newPost = { ...values, id: uuidv4(), author: session.user, created: new Date().toISOString() };
-                createPost(newPost);
+
+                try {
+                    const response = await createPost(newPost);
+                    if (response.status === 201) {
+                        // Redirect to the home page
+                        router.push('/');
+                    }
+                } catch (error) {
+                    console.error('Error creating the post:', error);
+                }
             }
         },
     });
