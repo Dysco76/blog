@@ -1,5 +1,6 @@
 import { deletePost, fetchPostById } from '@/api';
 import { formatDate } from '@/shared/util/formatDate';
+import { AxiosError } from 'axios';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -19,7 +20,12 @@ const Post = () => {
         isError,
         isLoading,
         data: post,
-    } = useQuery(['getPostById', postId], () => fetchPostById(postId));
+        error,
+    } = useQuery(['getPostById', postId], () => fetchPostById(postId), {
+        retry: false,
+    });
+
+    const postNotFoundError = isError && (error as AxiosError).response?.status === 404;
 
     const isUserAuthor = session?.user?.id === post?.author?.id;
 
@@ -35,6 +41,15 @@ const Post = () => {
             console.error('Error deleting the post:', error);
         }
     };
+
+    if (postNotFoundError) {
+        return (
+            <div>
+                <Link href="/">← Back to Home</Link>
+                <h1>Post not found</h1>
+            </div>
+        );
+    }
 
     return (
         <div>
