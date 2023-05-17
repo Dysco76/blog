@@ -1,4 +1,5 @@
 import { fetchPosts } from '@/api';
+import { FeaturedPost } from '@/components/FeaturedPost';
 import { formatDate } from '@/shared/util/formatDate';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -12,22 +13,25 @@ export default function Home() {
         const allBodyWords = postBody.split(' ');
 
         if (allBodyWords.length <= SHORTENED_BODY_LENGTH) {
-            return postBody
+            return postBody;
         }
 
-        return allBodyWords.slice(0, 20).join(' ') + '...'
-    }
+        return allBodyWords.slice(0, 20).join(' ') + '...';
+    };
 
-    if (isSuccess) {
+    if (isSuccess && posts.length > 0) {
+        const featuredPost = posts[0]; // considering the first post as the most recent
+        const otherPosts = posts.slice(1);
+
         return (
             <>
-                {posts.map((post) => (
+                <FeaturedPost post={featuredPost} />
+
+                {otherPosts.map((post) => (
                     <div key={post.id}>
                         <Link href={`/post/${post.id}`}>
                             <h3>{post.title}</h3>
-                            {post.cover && (
-                                <img src={post.cover} alt={`${post.title}: cover image`} width="200"/>
-                            )}
+                            {post.cover && <img src={post.cover} alt={`${post.title}: cover image`} width="200" />}
                         </Link>
                         {post.author && post.author.name && <p>by {post.author.name}</p>}
                         <sub>{formatDate(post.created)}</sub>
