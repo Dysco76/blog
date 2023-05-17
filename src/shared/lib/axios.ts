@@ -1,4 +1,4 @@
-import axiosFactory from 'axios';
+import axiosFactory, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 
 const axios = axiosFactory.create({
@@ -9,9 +9,11 @@ axios.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response) {
-            console.log(error)
-            // The request was made and the server responded with a status code outside the range of 2xx
-            toast.error(`Error ${error.response.status}: ${error.response.data.message || error.message}`);
+            // Ignore 404 errors
+            if (error.response.status !== 404) {
+                // The request was made and the server responded with a status code outside the range of 2xx
+                toast.error(`Error ${error.response.status}: ${error.response.data.message || error.message}`);
+            }
         } else if (error.request) {
             // The request was made but no response was received
             toast.error('Request error: No response received from the server.');
