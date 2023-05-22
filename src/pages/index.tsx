@@ -19,29 +19,6 @@ export default function Home() {
         return allBodyWords.slice(0, 20).join(' ') + '...';
     };
 
-    if (isSuccess && posts.length > 0) {
-        const featuredPost = posts[0]; // considering the first post as the most recent
-        const otherPosts = posts.slice(1);
-
-        return (
-            <>
-                <FeaturedPost post={featuredPost} />
-
-                {otherPosts.map((post) => (
-                    <div key={post.id}>
-                        <Link href={`/post/${post.id}`}>
-                            <h3>{post.title}</h3>
-                            {post.cover && <img src={post.cover} alt={`${post.title}: cover image`} width="200" />}
-                        </Link>
-                        {post.author && post.author.name && <p>by {post.author.name}</p>}
-                        <sub>{formatDate(post.created)}</sub>
-                        <p>{getShortenedPostBody(post.body)}</p>
-                    </div>
-                ))}
-            </>
-        );
-    }
-
     if (isLoading) {
         return <>Loading...</>;
     }
@@ -49,6 +26,32 @@ export default function Home() {
     if (isError) {
         return <>Something went wrong</>;
     }
+
+    if (!isSuccess || !posts) {
+        return <>No posts found</>;
+    }
+
+    const sortedPosts = posts.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+    const featuredPost = sortedPosts[0]; // considering the first post as the most recent
+    const otherPosts = sortedPosts.slice(1);
+
+    return (
+        <>
+            <FeaturedPost post={featuredPost} />
+
+            {otherPosts.map((post) => (
+                <div key={post.id} style={{borderBottom: '1px solid #aaa'}}>
+                    <Link href={`/post/${post.id}`}>
+                        <h3>{post.title}</h3>
+                        {post.cover && <img src={post.cover} alt={`${post.title}: cover image`} width="200" />}
+                    </Link>
+                    {post.author && post.author.name && <p>by {post.author.name}</p>}
+                    <sub>{formatDate(post.created)}</sub>
+                    <p>{getShortenedPostBody(post.body)}</p>
+                </div>
+            ))}
+        </>
+    );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
