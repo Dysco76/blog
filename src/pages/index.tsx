@@ -1,23 +1,13 @@
 import { fetchPosts } from '@/api';
 import { FeaturedPost } from '@/components/FeaturedPost';
 import { formatDate } from '@/shared/util/formatDate';
+import { getShortenedPostBody } from '@/shared/util/getShortenedPostBody';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
-const SHORTENED_BODY_LENGTH = 20;
-
 export default function Home() {
     const { isSuccess, data: posts, isLoading, isError } = useQuery(['getPosts'], fetchPosts);
-    const getShortenedPostBody = (postBody: types.Post['body']) => {
-        const allBodyWords = postBody.split(' ');
-
-        if (allBodyWords.length <= SHORTENED_BODY_LENGTH) {
-            return postBody;
-        }
-
-        return allBodyWords.slice(0, 20).join(' ') + '...';
-    };
 
     if (isLoading) {
         return <>Loading...</>;
