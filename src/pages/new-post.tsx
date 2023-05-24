@@ -12,12 +12,14 @@ import { useState } from 'react';
 
 type PostFormValues = {
     title: string;
-    cover: string;
+    subtitle?: string;
+    cover?: string;
     body: string;
 };
 
 const initialValues = {
     title: '',
+    subtitle: '',
     cover: '',
     body: '',
 };
@@ -56,6 +58,14 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
         <form className={className} onSubmit={formik.handleSubmit}>
             <label htmlFor="title">Title</label>
             <input value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur} id="title" />
+            <label htmlFor="subtitle">Subtitle</label>
+            <input
+                value={formik.values.subtitle}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                id="subtitle"
+                placeholder="If not provided, the first few words of post body will be used as the subtitle"
+            />
             <label htmlFor="cover">Cover Image</label>
             <input value={formik.values.cover} onChange={formik.handleChange} onBlur={formik.handleBlur} id="cover" />
             <label htmlFor="body">Body</label>
