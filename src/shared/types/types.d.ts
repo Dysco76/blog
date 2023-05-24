@@ -3,6 +3,7 @@ declare namespace types {
         author: types.User;
         id: string;
         title: string;
+        subtitle?: string;
         body: string;
         cover?: string;
         created: string;
