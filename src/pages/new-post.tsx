@@ -17,18 +17,30 @@ type PostFormValues = {
     body: string;
 };
 
-const initialValues = {
+const initialValues: PostFormValues = {
     title: '',
     subtitle: '',
     cover: '',
     body: '',
 };
 
+const validate = (values: PostFormValues) => {
+    const errors: Partial<PostFormValues> = {};
+
+    if (!values.title) {
+        errors.title = 'Title is required';
+    }
+
+    if (!values.body) {
+        errors.body = 'Body is required';
+    } else if (values.body.length < 10) {
+        errors.body = 'Body must be at least 10 characters';
+    }
+
+    return errors;
+};
+
 const NewPost = styled(({ className }: PropsWithClassName) => {
-    // As this page uses Server Side Rendering, the `session` will be already
-    // populated on render without needing to go through a loading stage.
-    // This is possible because of the shared context configured in `_app.js` that
-    // is used by `useSession()`.
     const { data: session } = useSession();
     const [creating, setCreating] = useState(false);
 
@@ -36,6 +48,7 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
 
     const formik = useFormik<PostFormValues>({
         initialValues,
+        validate,
         onSubmit: async (values) => {
             setCreating(true);
             if (session && session.user) {
@@ -44,7 +57,6 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
                 try {
                     const response = await createPost(newPost);
                     if (response.status === 201) {
-                        // Redirect to the home page
                         router.push('/');
                     }
                 } catch (error) {
@@ -58,6 +70,7 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
         <form className={className} onSubmit={formik.handleSubmit}>
             <label htmlFor="title">Title</label>
             <input value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur} id="title" />
+            {formik.errors.title && formik.touched.title && <p style={{color: 'red'}}>{formik.errors.title}</p>}
             <label htmlFor="subtitle">Subtitle</label>
             <input
                 value={formik.values.subtitle}
@@ -70,7 +83,8 @@ const NewPost = styled(({ className }: PropsWithClassName) => {
             <input value={formik.values.cover} onChange={formik.handleChange} onBlur={formik.handleBlur} id="cover" />
             <label htmlFor="body">Body</label>
             <textarea value={formik.values.body} onChange={formik.handleChange} onBlur={formik.handleBlur} id="body" />
-            <button disabled={creating}>{creating ? 'Creating...' : 'Create post'}</button>
+            {formik.errors.body && formik.touched.body && <p style={{color: 'red'}}>{formik.errors.body}</p>}
+            <button disabled={creating || !formik.isValid}>{creating ? 'Creating...' : 'Create post'}</button>
         </form>
     );
 })`
@@ -85,7 +99,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getServerSession(context.req, context.res, authOptions);
 
     if (!session) {
-        // Redirect unauthenticated users to the login page or any other page
         return {
             redirect: {
                 destination: '/login',
