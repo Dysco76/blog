@@ -16,6 +16,11 @@ export const Header = () => {
                         </Link>
                     </li>
                     <li>
+                        <Link href="/posts" className={pathname === '/posts' ? 'disabledLink' : ''}>
+                            All posts
+                        </Link>
+                    </li>
+                    <li>
                         <Link href="/new-post" className={pathname === '/new-post' ? 'disabledLink' : ''}>
                             + Add new post
                         </Link>

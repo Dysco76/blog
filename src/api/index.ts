@@ -1,6 +1,9 @@
 import { axios } from '@/shared/lib/axios';
 
-export const fetchPosts = () => axios.get<types.Post[]>('/posts').then(({ data }) => data);
+export const fetchPosts = () => axios.get<types.Post[]>('/posts?_sort=created&_order=desc').then(({ data }) => data);
+
+export const fetchPostsByPage = (page: number) =>
+    axios.get<types.Post[]>(`/posts?_page=${page}&_sort=created&_order=desc`).then(({ data }) => data);
 
 export const fetchPostById = (id: string) => axios.get<types.Post>(`/posts/${id}`).then(({ data }) => data);
 
