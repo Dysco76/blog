@@ -1,4 +1,4 @@
-import { fetchPosts } from '@/api';
+import { fetchPostsByPage } from '@/api';
 import { FeaturedPost } from '@/components/FeaturedPost';
 import { formatDate } from '@/shared/util/formatDate';
 import { getShortenedPostBody } from '@/shared/util/getShortenedPostBody';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 export default function Home() {
-    const { isSuccess, data: posts, isLoading, isError } = useQuery(['getPosts'], fetchPosts);
+    const { isSuccess, data: posts, isLoading, isError } = useQuery(['getPosts'], () => fetchPostsByPage(1));
 
     if (isLoading) {
         return <>Loading...</>;
@@ -47,7 +47,7 @@ export default function Home() {
 export const getServerSideProps: GetServerSideProps = async () => {
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery(['getPosts'], fetchPosts);
+    await queryClient.prefetchQuery(['getPosts'], () => fetchPostsByPage(1));
 
     return {
         props: {
