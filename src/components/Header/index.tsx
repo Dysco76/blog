@@ -8,7 +8,7 @@ export const Header = () => {
 
     return (
         <HeaderStyled>
-            <ul>
+            <ul className="container">
                 <li>
                     <Link href="/" className={pathname === '/' ? 'disabledLink' : ''}>
                         Home
@@ -31,5 +31,3 @@ export const Header = () => {
         </HeaderStyled>
     );
 };
-
-
